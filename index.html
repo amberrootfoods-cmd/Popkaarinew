@@ -1812,12 +1812,12 @@
         onScroll();
       })();
 
-      // Announcement countdown (set your real launch ISO below)
+      // Announcement countdown (LIVE) — set your real launch ISO below
       (function(){
         const el = document.getElementById('countdown');
         if(!el) return;
 
-        // ✅ Change this to your real launch date/time in IST
+        // ✅ Launch date/time in IST
         const LAUNCH_ISO = "2026-01-01T10:00:00+05:30";
         const launch = new Date(LAUNCH_ISO);
 
@@ -1826,20 +1826,30 @@
           return;
         }
 
+        function fmt(n){ return String(n).padStart(2,'0'); }
+
         const tick = () => {
           const now = new Date();
-          const ms = launch.getTime() - now.getTime();
+          let ms = launch.getTime() - now.getTime();
+
           if(ms <= 0){
             el.textContent = "We’re live! 🎉";
             return;
           }
-          const d = Math.floor(ms / (1000*60*60*24));
-          const h = Math.floor((ms / (1000*60*60)) % 24);
-          const m = Math.floor((ms / (1000*60)) % 60);
-          el.textContent = `Launch in ${d}d ${h}h ${m}m`;
+
+          const totalSec = Math.floor(ms / 1000);
+          const d = Math.floor(totalSec / (3600*24));
+          const h = Math.floor((totalSec % (3600*24)) / 3600);
+          const m = Math.floor((totalSec % 3600) / 60);
+          const s = totalSec % 60;
+
+          // Example: Launch in 12d 03:17:09
+          el.textContent = `Launch in ${d}d ${fmt(h)}:${fmt(m)}:${fmt(s)}`;
         };
+
         tick();
-        setInterval(tick, 60 * 1000);
+        // Update every second for "live" feel
+        setInterval(tick, 1000);
       })();// Toast helper
       function toast(msg){
         const t = document.getElementById('toast');
