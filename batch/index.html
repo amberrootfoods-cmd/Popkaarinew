@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Batch Trace | Premium Transparency</title>
+  <meta name="description" content="Batch Trace: sourcing region, farmer network, and quality checks for your product batch." />
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#0f1620;
+      --card2:#0c121a;
+      --text:#eaf0f6;
+      --muted:#b7c4d3;
+      --line:rgba(255,255,255,.10);
+      --accent:#c9a227; /* premium gold */
+      --good:#46d39a;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --shadow: 0 18px 70px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(201,162,39,.18), transparent 60%),
+        radial-gradient(900px 600px at 90% 0%, rgba(70,211,154,.12), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    a{color:inherit}
+    .wrap{max-width:1120px;margin:0 auto;padding:22px 16px 70px}
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:10px 0 18px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;min-width:0;
+      text-decoration:none;
+    }
+    .logo{
+      width:40px;height:40px;border-radius:14px;
+      background: linear-gradient(180deg, rgba(201,162,39,.32), rgba(201,162,39,.08));
+      border:1px solid rgba(201,162,39,.45);
+      display:grid;place-items:center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      font-weight:900;
+      letter-spacing:.02em;
+    }
+    .brand small{display:block;color:var(--muted);margin-top:2px}
+    .nav{
+      display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end
+    }
+    .pill{
+      padding:9px 12px;border-radius:999px;border:1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      text-decoration:none;
+      font-size:13px;color:var(--muted);
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .pill:hover{transform:translateY(-1px);border-color:rgba(201,162,39,.45);background:rgba(0,0,0,.32)}
+    .hero{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;inset:-2px;
+      background:
+        radial-gradient(900px 320px at 15% 0%, rgba(201,162,39,.18), transparent 55%),
+        radial-gradient(700px 260px at 85% 10%, rgba(70,211,154,.14), transparent 60%);
+      pointer-events:none;
+    }
+    .hero-inner{
+      position:relative;
+      padding:22px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    @media (max-width: 920px){
+      .hero-inner{grid-template-columns:1fr}
+    }
+    h1{margin:0;font-size:34px;letter-spacing:-.03em;line-height:1.1}
+    .sub{color:var(--muted);margin:10px 0 0;max-width:70ch}
+    .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      color:var(--muted);
+      font-size:12px;
+    }
+    .dot{width:9px;height:9px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 6px rgba(201,162,39,.16)}
+    .good{background:var(--good);box-shadow:0 0 0 6px rgba(70,211,154,.14)}
+    .hero-card{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      border-radius: var(--radius);
+      padding:14px;
+      display:flex;flex-direction:column;gap:12px;
+      min-height: 230px;
+    }
+    .row{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between
+    }
+    .label{font-size:12px;color:var(--muted)}
+    .value{font-weight:800;font-size:16px;letter-spacing:-.01em}
+    .hint{font-size:12px;color:rgba(183,196,211,.85)}
+    .form{
+      display:grid;grid-template-columns: 1fr auto;
+      gap:10px;margin-top:6px;
+    }
+    @media (max-width: 520px){ .form{grid-template-columns:1fr} }
+    .in{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    .in::placeholder{color:rgba(183,196,211,.65)}
+    .btn{
+      appearance:none;
+      border:1px solid rgba(201,162,39,.55);
+      background: linear-gradient(180deg, rgba(201,162,39,.22), rgba(201,162,39,.10));
+      color: var(--text);
+      padding:11px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:14px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{transform:translateY(-1px);border-color:rgba(201,162,39,.8)}
+    .btn.ghost{
+      border-color:var(--line);
+      background: rgba(0,0,0,.22);
+      font-weight:700;
+    }
+    .btn.ghost:hover{border-color:rgba(201,162,39,.35)}
+    main{margin-top:16px;display:grid;gap:14px}
+    .grid2{display:grid;grid-template-columns: 1fr 1fr; gap:14px}
+    @media (max-width: 920px){ .grid2{grid-template-columns:1fr} }
+    .card{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      border-radius: var(--radius);
+      padding:16px;
+    }
+    .card h2{margin:0 0 10px;font-size:18px;letter-spacing:-.01em}
+    .muted{color:var(--muted)}
+    .kv{
+      display:grid;grid-template-columns: 1fr 1fr; gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width: 540px){ .kv{grid-template-columns:1fr} }
+    .box{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px;
+    }
+    .k{font-size:12px;color:var(--muted)}
+    .v{margin-top:4px;font-weight:800;font-size:14px}
+    .timeline{display:grid;gap:10px;margin-top:10px}
+    .step{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px;
+      display:grid;
+      grid-template-columns: 110px 1fr;
+      gap:12px;
+      align-items:start;
+    }
+    @media (max-width: 560px){ .step{grid-template-columns:1fr} }
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:12px;color:var(--muted);
+      width:fit-content;
+      padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+      background: rgba(0,0,0,.22);
+    }
+    .chk{width:10px;height:10px;border-radius:999px;background:var(--good);box-shadow:0 0 0 6px rgba(70,211,154,.12)}
+    .warnDot{background:var(--warn);box-shadow:0 0 0 6px rgba(255,204,102,.12)}
+    .map{
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:14px;
+      padding:14px;
+      background: rgba(0,0,0,.12);
+      margin-top:10px;
+      min-height:160px;
+      position:relative;
+      overflow:hidden;
+    }
+    .map::before{
+      content:"";
+      position:absolute; inset:-40px;
+      background:
+        radial-gradient(300px 180px at 30% 35%, rgba(201,162,39,.15), transparent 60%),
+        radial-gradient(360px 210px at 70% 60%, rgba(70,211,154,.10), transparent 60%);
+      filter: blur(0px);
+      pointer-events:none;
+    }
+    .map .content{position:relative}
+    .mini{font-size:12px;color:rgba(183,196,211,.85)}
+    details{
+      border-top:1px solid var(--line);
+      padding-top:10px;margin-top:10px;
+    }
+    summary{cursor:pointer;font-weight:800}
+    footer{
+      margin-top:16px;
+      color:rgba(183,196,211,.85);
+      font-size:12px;
+      display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      padding-top:10px;
+    }
+    .toast{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      background: rgba(15,22,32,.92);
+      border:1px solid var(--line);
+      border-radius: 999px;
+      padding:10px 12px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      color:var(--text);
+      font-size:13px;
+      opacity:0; pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(-2px)}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="#" aria-label="Brand home">
+        <div class="logo">T</div>
+        <div>
+          <div style="font-weight:900;letter-spacing:-.01em">Batch Trace</div>
+          <small>Premium transparency & trust</small>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Page navigation">
+        <a class="pill" href="#snapshot">Snapshot</a>
+        <a class="pill" href="#quality">Quality checks</a>
+        <a class="pill" href="#sourcing">Sourcing</a>
+        <a class="pill" href="#faq">FAQ</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-label="Batch trace hero">
+      <div class="hero-inner">
+        <div>
+          <div class="badge-row">
+            <div class="badge"><span class="dot"></span> Traceable batch record</div>
+            <div class="badge"><span class="dot good"></span> QC logged & verified</div>
+            <div class="badge">Transparency-first</div>
+          </div>
+
+          <h1 style="margin-top:12px;">Trace your batch details — end to end.</h1>
+          <p class="sub">
+            Enter your batch code to view the sourcing region, farmer network, processing timeline,
+            and quality checkpoints. Premium isn't a claim — it's a documented process.
+          </p>
+        </div>
+
+        <aside class="hero-card" aria-label="Batch lookup">
+          <div class="row">
+            <div>
+              <div class="label">Current batch</div>
+              <div class="value" id="batchTitle">PKR-2401-A12</div>
+            </div>
+            <div class="badge"><span class="chk"></span><span id="statusText">Passed</span></div>
+          </div>
+
+          <div class="hint">
+            Batch code is printed near the packaging date / MRP label (example: <b>PKR-2401-A12</b>).
+          </div>
+
+          <div class="form">
+            <input class="in" id="batchInput" placeholder="Enter batch code (e.g., PKR-2401-A12)" />
+            <button class="btn" id="btnLoad">View batch</button>
+          </div>
+
+          <div class="row" style="margin-top:2px;">
+            <button class="btn ghost" id="btnCopy">Copy share link</button>
+            <button class="btn ghost" id="btnPrint">Print</button>
+          </div>
+
+          <div class="mini" id="shareLine">Share link: <span id="shareUrlText"></span></div>
+        </aside>
+      </div>
+    </section>
+
+    <main>
+      <section class="grid2" id="snapshot" aria-label="Snapshot section">
+        <div class="card">
+          <h2>Batch snapshot</h2>
+          <p class="muted" style="margin:0 0 10px;">
+            Quick facts pulled from the batch record.
+          </p>
+
+          <div class="kv">
+            <div class="box">
+              <div class="k">Product</div>
+              <div class="v" id="prodVal">Makhana • Classic</div>
+            </div>
+            <div class="box">
+              <div class="k">Net weight</div>
+              <div class="v" id="wtVal">100 g</div>
+            </div>
+            <div class="box">
+              <div class="k">Packed on</div>
+              <div class="v" id="packVal">2026-01-01</div>
+            </div>
+            <div class="box">
+              <div class="k">Best before</div>
+              <div class="v" id="bbVal">2026-06-30</div>
+            </div>
+          </div>
+
+          <details>
+            <summary>Ingredients & allergen note</summary>
+            <p class="muted" style="margin:10px 0 0;">
+              Makhana (fox nuts). Roasted in edible oil. Seasoning (if flavored). Manufactured in a facility that may handle
+              nuts, seeds, and dairy-based ingredients. (Update this to match your label.)
+            </p>
+          </details>
+        </div>
+
+        <div class="card" aria-label="Certificates and documents">
+          <h2>Documents</h2>
+          <p class="muted" style="margin:0 0 10px;">
+            Download batch-linked documents (placeholders here — connect to your PDFs).
+          </p>
+
+          <div class="kv">
+            <div class="box">
+              <div class="k">COA / Lab report</div>
+              <div class="v"><a href="#" id="coaLink">Download (PDF)</a></div>
+            </div>
+            <div class="box">
+              <div class="k">QC checklist</div>
+              <div class="v"><a href="#" id="qcLink">View checklist</a></div>
+            </div>
+            <div class="box">
+              <div class="k">Packaging audit</div>
+              <div class="v"><a href="#" id="packAuditLink">View audit</a></div>
+            </div>
+            <div class="box">
+              <div class="k">Support</div>
+              <div class="v"><a href="#faq">Batch help</a></div>
+            </div>
+          </div>
+
+          <details>
+            <summary>How this stays premium</summary>
+            <p class="muted" style="margin:10px 0 0;">
+              We log each checkpoint (incoming grading → moisture → roast validation → metal detection → sealing & label audit),
+              so quality is measurable and repeatable across batches.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section class="grid2" aria-label="Quality and sourcing sections">
+        <div class="card" id="quality">
+          <h2>Quality checks timeline</h2>
+          <p class="muted" style="margin:0 0 10px;">
+            Each step is time-stamped and recorded for this batch.
+          </p>
+
+          <div class="timeline" id="timeline"></div>
+
+          <details>
+            <summary>What “Passed” means</summary>
+            <p class="muted" style="margin:10px 0 0;">
+              “Passed” indicates all mandatory checks were completed and within acceptable limits for safety, consistency,
+              and pack integrity. (You can add exact thresholds once you finalize them.)
+            </p>
+          </details>
+        </div>
+
+        <div class="card" id="sourcing">
+          <h2>Sourcing region & farmer network</h2>
+          <p class="muted" style="margin:0 0 10px;">
+            Origin details to help you trace the supply chain.
+          </p>
+
+          <div class="kv">
+            <div class="box">
+              <div class="k">Sourcing region</div>
+              <div class="v" id="regionVal">Bihar • Mithila belt</div>
+            </div>
+            <div class="box">
+              <div class="k">Farmer network</div>
+              <div class="v" id="networkVal">Partner cluster • 120+ farmers</div>
+            </div>
+            <div class="box">
+              <div class="k">Procurement channel</div>
+              <div class="v" id="channelVal">Direct partner procurement</div>
+            </div>
+            <div class="box">
+              <div class="k">Lot type</div>
+              <div class="v" id="lotVal">Single-origin lot</div>
+            </div>
+          </div>
+
+          <div class="map" aria-label="Map placeholder">
+            <div class="content">
+              <div class="tag"><span class="warnDot chk" style="background:var(--warn)"></span> Map view placeholder</div>
+              <p class="muted" style="margin:10px 0 0;">
+                Replace this with an embedded map or an origin image (district/region map). For a static site,
+                you can insert a PNG/JPG of the sourcing belt here.
+              </p>
+              <p class="mini" style="margin:8px 0 0;">
+                Suggested: show state/district + nearest processing unit + partner network coverage.
+              </p>
+            </div>
+          </div>
+
+          <details>
+            <summary>Farmer network note</summary>
+            <p class="muted" style="margin:10px 0 0;">
+              Farmer identities are protected. We share region + partner cluster details to balance privacy with transparency.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section class="card" id="faq" aria-label="FAQ section">
+        <h2>FAQ</h2>
+        <details>
+          <summary>I can’t find my batch code — where is it?</summary>
+          <p class="muted" style="margin:10px 0 0;">
+            Look near the MRP / packaging date area. It usually looks like <b>PKR-2401-A12</b>.
+          </p>
+        </details>
+        <details>
+          <summary>Why does my batch show different dates?</summary>
+          <p class="muted" style="margin:10px 0 0;">
+            Sourcing and processing happen before packing. The record tracks each event date separately.
+          </p>
+        </details>
+        <details>
+          <summary>Can I verify this record?</summary>
+          <p class="muted" style="margin:10px 0 0;">
+            You can share the batch link with your retailer or support. We can confirm the record using the same code.
+          </p>
+        </details>
+
+        <div class="kv" style="margin-top:14px;">
+          <div class="box">
+            <div class="k">Support email</div>
+            <div class="v"><a href="mailto:founder@popkari.com">founder@popkari.com</a></div>
+          </div>
+          <div class="box">
+            <div class="k">WhatsApp</div>
+            <div class="v"><a href="https://wa.me/919910657383" target="_blank" rel="noopener">Chat on WhatsApp</a></div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div>© <span id="yr"></span> Batch Trace • Transparency-first</div>
+        <div class="mini">Built as a one-pager. Connect to your backend later for live batch data.</div>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
+
+  <script>
+    // ====== CONFIG (Edit these) ======
+    const BRAND_NAME = "Popkaari"; // optional display usage
+    const SUPPORT_EMAIL = "founder@popkari.com";
+    const WHATSAPP_LINK = "https://wa.me/919910657383";
+    const DOCS_BASE = "#"; // set to your docs folder, e.g. "/docs/"
+
+    // ====== DEMO DATA (Replace with API later) ======
+    const batches = {
+      "PKR-2401-A12": {
+        status: "Passed",
+        product: "Makhana • Classic",
+        netWeight: "100 g",
+        packedOn: "2026-01-01",
+        bestBefore: "2026-06-30",
+        region: "Bihar • Mithila belt",
+        farmerNetwork: "Partner cluster • 120+ farmers",
+        procurement: "Direct partner procurement",
+        lotType: "Single-origin lot",
+        docs: {
+          coa: "#",
+          qc: "#",
+          packAudit: "#"
+        },
+        checks: [
+          { label: "Incoming grading", date: "2025-12-26", note: "Size sorting + impurity check + lot segregation", state: "ok" },
+          { label: "Moisture & shelf stability", date: "2025-12-27", note: "Moisture within safe band to preserve crunch", state: "ok" },
+          { label: "Roast validation", date: "2025-12-29", note: "Roast profile logged for taste + texture consistency", state: "ok" },
+          { label: "Metal detection", date: "2025-12-31", note: "Safety screening before packaging", state: "ok" },
+          { label: "Sealing & label audit", date: "2026-01-01", note: "Pack integrity + label + batch code verified", state: "ok" }
+        ]
+      },
+      "PKR-2402-B07": {
+        status: "Passed",
+        product: "Makhana • Peri Peri",
+        netWeight: "50 g",
+        packedOn: "2026-01-02",
+        bestBefore: "2026-07-01",
+        region: "Bihar • Darbhanga belt",
+        farmerNetwork: "Partner cluster • 80+ farmers",
+        procurement: "Direct partner procurement",
+        lotType: "Regional blend lot",
+        docs: { coa: "#", qc: "#", packAudit: "#" },
+        checks: [
+          { label: "Incoming grading", date: "2025-12-28", note: "Grading + impurity check", state: "ok" },
+          { label: "Moisture & shelf stability", date: "2025-12-29", note: "Moisture check logged", state: "ok" },
+          { label: "Roast validation", date: "2025-12-31", note: "Profile locked for flavor base", state: "ok" },
+          { label: "Metal detection", date: "2026-01-01", note: "Safety screening", state: "ok" },
+          { label: "Sealing & label audit", date: "2026-01-02", note: "Final audit complete", state: "ok" }
+        ]
+      }
+    };
+
+    // ====== DOM helpers ======
+    const $ = (id) => document.getElementById(id);
+
+    const batchTitle = $("batchTitle");
+    const statusText = $("statusText");
+    const batchInput = $("batchInput");
+    const shareUrlText = $("shareUrlText");
+
+    const prodVal = $("prodVal");
+    const wtVal = $("wtVal");
+    const packVal = $("packVal");
+    const bbVal = $("bbVal");
+
+    const regionVal = $("regionVal");
+    const networkVal = $("networkVal");
+    const channelVal = $("channelVal");
+    const lotVal = $("lotVal");
+
+    const coaLink = $("coaLink");
+    const qcLink = $("qcLink");
+    const packAuditLink = $("packAuditLink");
+
+    const timeline = $("timeline");
+    const toast = $("toast");
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 900);
+    }
+
+    function buildShareURL(code){
+      const url = new URL(window.location.href);
+      url.searchParams.set("batch", code);
+      return url.toString();
+    }
+
+    function setLinks(data){
+      coaLink.href = data.docs?.coa || "#";
+      qcLink.href = data.docs?.qc || "#";
+      packAuditLink.href = data.docs?.packAudit || "#";
+    }
+
+    function renderTimeline(checks){
+      timeline.innerHTML = "";
+      (checks || []).forEach((c) => {
+        const stateDot = c.state === "ok" ? "chk" : "warnDot";
+        const stateLabel = c.state === "ok" ? "Logged" : "Review";
+        const el = document.createElement("div");
+        el.className = "step";
+        el.innerHTML = `
+          <div>
+            <div class="tag"><span class="${stateDot}"></span> ${stateLabel}</div>
+            <div class="mini" style="margin-top:8px;color:rgba(183,196,211,.9)"><b>${c.date || "—"}</b></div>
+          </div>
+          <div>
+            <div style="font-weight:900">${c.label || "Checkpoint"}</div>
+            <div class="muted" style="margin-top:4px;font-size:13px">${c.note || ""}</div>
+          </div>
+        `;
+        timeline.appendChild(el);
+      });
+    }
+
+    function loadBatch(code){
+      const clean = (code || "").trim();
+      const data = batches[clean] || null;
+
+      batchTitle.textContent = clean || "—";
+      batchInput.value = clean;
+
+      shareUrlText.textContent = buildShareURL(clean || "");
+      $("shareLine").style.display = clean ? "block" : "none";
+
+      if(!data){
+        statusText.textContent = "Not found";
+        statusText.parentElement.style.borderColor = "rgba(255,107,107,.45)";
+        statusText.parentElement.style.background = "rgba(255,107,107,.10)";
+
+        // Clear fields to safe defaults
+        prodVal.textContent = "—";
+        wtVal.textContent = "—";
+        packVal.textContent = "—";
+        bbVal.textContent = "—";
+        regionVal.textContent = "—";
+        networkVal.textContent = "—";
+        channelVal.textContent = "—";
+        lotVal.textContent = "—";
+        setLinks({docs:{coa:"#",qc:"#",packAudit:"#"}});
+        renderTimeline([]);
+        showToast("Batch not found");
+        return;
+      }
+
+      // Status style
+      statusText.textContent = data.status || "—";
+      statusText.parentElement.style.borderColor = "rgba(70,211,154,.35)";
+      statusText.parentElement.style.background = "rgba(70,211,154,.08)";
+
+      prodVal.textContent = data.product || "—";
+      wtVal.textContent = data.netWeight || "—";
+      packVal.textContent = data.packedOn || "—";
+      bbVal.textContent = data.bestBefore || "—";
+
+      regionVal.textContent = data.region || "—";
+      networkVal.textContent = data.farmerNetwork || "—";
+      channelVal.textContent = data.procurement || "—";
+      lotVal.textContent = data.lotType || "—";
+
+      setLinks(data);
+      renderTimeline(data.checks || []);
+    }
+
+    // Events
+    $("btnLoad").addEventListener("click", () => loadBatch(batchInput.value));
+    batchInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") loadBatch(batchInput.value);
+    });
+
+    $("btnCopy").addEventListener("click", async () => {
+      const code = batchTitle.textContent.trim();
+      const link = buildShareURL(code);
+      try{
+        await navigator.clipboard.writeText(link);
+        showToast("Share link copied");
+      }catch(err){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = link;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        showToast("Share link copied");
+      }
+    });
+
+    $("btnPrint").addEventListener("click", () => window.print());
+
+    // Footer year + support links
+    $("yr").textContent = new Date().getFullYear();
+    // Update support (if you want to show in page text)
+    document.querySelector('a[href^="mailto:"]').href = "mailto:" + SUPPORT_EMAIL;
+    document.querySelector('a[href^="mailto:"]').textContent = SUPPORT_EMAIL;
+    document.querySelector('a[href^="https://wa.me/"]').href = WHATSAPP_LINK;
+
+    // Load batch from URL (e.g., ?batch=PKR-2401-A12) or default
+    const url = new URL(window.location.href);
+    const qBatch = url.searchParams.get("batch");
+    loadBatch(qBatch || "PKR-2401-A12");
+  </script>
+</body>
+</html>
