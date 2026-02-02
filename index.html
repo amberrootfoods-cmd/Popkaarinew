@@ -105,18 +105,60 @@
       background: rgba(255,255,255,.78);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
+    
+      overflow: visible;
     }
     .announce{
       border-bottom: 1px solid var(--border);
       background: rgba(255,255,255,.62);
     }
+
+    /* Announcement bar layout
+       - Keeps pills on ONE line (scrollable) to avoid messy wrapping
+       - Keeps CTAs aligned and consistent across devices */
     .announce .inner{
-      display:flex; align-items:center; justify-content:space-between;
-      gap: .85rem;
+      display:grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items:center;
+      gap: .75rem;
       padding: .55rem 0;
-      flex-wrap: wrap;
     }
-    .announce .left, .announce .right{display:flex; gap:.6rem; align-items:center; flex-wrap:wrap;}
+    .announce .left{
+      display:flex;
+      gap: .6rem;
+      align-items:center;
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      padding-bottom: 2px; /* room for hidden scrollbar */
+    }
+    .announce .left::-webkit-scrollbar{ display:none; }
+    .announce .left{ scrollbar-width: none; } /* Firefox */
+    .announce .left .pill{ flex: 0 0 auto; }
+
+    .announce .right{
+      display:flex;
+      gap: .6rem;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap: nowrap;
+    }
+    .announce .right .button{ flex: 0 0 auto; }
+
+    /* Utility: swap label text on small screens */
+    .hide-sm{ display:inline; }
+    .show-sm{ display:none; }
+
+    /* Small screens: keep the announcement bar in ONE row (pills scroll),
+       and shrink padding/font so it stays compact. */
+    @media (max-width: 560px){
+      .announce .inner{ gap: .6rem; }
+      .announce .right{ gap: .5rem; }
+      .pill{ font-size: .92rem; padding: .38rem .65rem; }
+      .hide-sm{ display:none !important; }
+      .show-sm{ display:inline !important; }
+    }
     .nav{
       display:flex; align-items:center; justify-content:space-between;
       gap:1rem; padding:.85rem 0;
@@ -181,10 +223,12 @@
 
     .mobile-menu{
       display:none;
-      position: fixed;
-      top: 68px;
-      left: 16px;
-      right: 16px;
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(var(--max), calc(100vw - 32px));
+      max-width: calc(100vw - 32px);
       background: rgba(255,255,255,.94);
       border: 1px solid var(--border);
       border-radius: 22px;
@@ -489,7 +533,7 @@
       .cta-row .button{ width: 100%; justify-content: center; }
       .email-row{ flex-direction: column; align-items: stretch; }
       .email-row .button{ width: 100%; }
-      .mobile-menu{ top: 64px; left: 12px; right: 12px; }
+      .mobile-menu{ width: calc(100vw - 24px); }
       .float{ right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); }
       .fab{ width: 50px; height: 50px; }
     }
@@ -519,7 +563,7 @@
             <span class="pill">⏳ Shelf life: 6 months</span>
           </div>
           <div class="right">
-            <button class="button small ghost" type="button" data-open-perk>Get ₹50 off (email)</button>
+            <button class="button small ghost" type="button" data-open-perk aria-label="Get ₹50 off via email"><span class="hide-sm">Get ₹50 off (email)</span><span class="show-sm">₹50 off</span></button>
             <a class="button small primary" href="#order">Buy</a>
           </div>
         </div>
@@ -603,7 +647,7 @@
         <div class="hero-card" aria-label="Popkaari lifestyle photo">
           <!-- Replace with your own product/lifestyle images for better brand trust -->
           <img alt="A clean, premium snack moment" loading="lazy"
-               src="images/hero12" />
+               src="https://source.unsplash.com/1200x900/?healthy,snack,bowl" />
           <div class="pad">
             <div class="kicker">Today’s best pick</div>
             <div style="display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-top:.35rem;">
