@@ -1,0 +1,12 @@
+{
+  "name": "popkaari-storefront",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check assets/js/store.js && node --check netlify/functions/orders.mjs && node --check netlify/functions/leads.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -555,6 +555,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       *{ transition: none !important; scroll-behavior: auto !important; }
     }
   </style>
+  <link rel="stylesheet" href="assets/css/store.css" />
 </head>
 
 <body>
@@ -574,7 +575,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div class="right">
             <button class="button small ghost" type="button" data-open-perk aria-label="Get ₹50 off via email"><span class="hide-sm">Get ₹50 off (email)</span><span class="show-sm">₹50 off</span></button>
-            <a class="button small primary" href="#order">Buy</a>
+            <button class="button small primary cart-trigger" type="button" aria-controls="cartDrawer">
+              Cart <span class="cart-count" aria-label="0 items">0</span>
+            </button>
           </div>
         </div>
       </div>
@@ -590,6 +593,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="#trust">Food info</a>
           <a href="#faq">FAQ</a>
           <button class="button small" type="button" data-open-perk>Get ₹50 off</button>
+          <button class="button small primary cart-trigger" type="button" aria-controls="cartDrawer">Cart <span class="cart-count">0</span></button>
         </div>
 
         <button class="iconbtn menu-btn" type="button" id="menuBtn"
@@ -607,7 +611,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="divider" role="separator" aria-hidden="true"></div>
 
         <div class="mobile-actions">
-          <a class="button primary" href="#order" data-close-menu>Buy on WhatsApp</a>
+          <button class="button primary cart-trigger" type="button" data-close-menu aria-controls="cartDrawer">View cart <span class="cart-count">0</span></button>
           <button class="button" type="button" data-open-perk data-close-menu>Get ₹50 off</button>
         </div>
       </div>
@@ -627,7 +631,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </p>
 
           <div class="cta-row">
-            <a class="button primary" href="#order">Buy Raw Makhana</a>
+            <button class="button primary" type="button" data-add-to-cart="raw-makhana-100g">Add Raw Makhana • ₹249</button>
             <a class="button" href="#products">See products</a>
             <button class="button ghost" type="button" data-open-perk>Get ₹50 off</button>
           </div>
@@ -731,11 +735,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="muted">Pure + versatile. Roast it your way, add to kheer, or build your own mixes.</p>
             <div class="price">₹249 <span class="muted" style="font-weight:600;">/ 100g • all inclusive</span></div>
             <div class="cta-row">
-              <a class="button primary" target="_blank" rel="noopener"
+              <button class="button primary" type="button" data-add-to-cart="raw-makhana-100g">Add to cart</button>
+              <a class="button" target="_blank" rel="noopener"
                  href="https://wa.me/919910657383?text=Hi%20Popkaari!%20I%20want%20to%20buy%20Raw%20Makhana%20100g%20for%20%E2%82%B9249%20(all%20inclusive).%20Please%20share%20the%20payment%20link%20and%20delivery%20timeline%20for%20New%20Delhi.">
-                Buy on WhatsApp
+                WhatsApp
               </a>
-              <button class="button" type="button" data-open-perk data-interest="Raw Makhana">Get ₹50 off</button>
             </div>
             <div class="muted fineprint" style="margin-top:.75rem;">
               FSSAI: <strong>13326998000075</strong> • Packed in <strong>New Delhi</strong> • Shelf life <strong>6 months</strong>
@@ -790,13 +794,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="split">
         <div class="card">
           <div class="body">
-            <h2>Order on WhatsApp</h2>
+            <h2>Order directly from Popkaari</h2>
             <p class="muted">
-              Fast ordering, quick replies, and easy payment links. Message us and we’ll guide you end‑to‑end.
+              Add products to your cart, save your delivery details, and place an order request. We’ll confirm delivery and share a secure payment link on WhatsApp.
             </p>
 
             <div class="cta-row">
-              <a class="button primary" target="_blank" rel="noopener"
+              <button class="button primary" type="button" data-add-to-cart="raw-makhana-100g">Add Raw Makhana • ₹249</button>
+              <a class="button" target="_blank" rel="noopener"
                  href="https://wa.me/919910657383?text=Hi%20Popkaari!%20I%20want%20to%20buy%20Raw%20Makhana%20100g%20for%20%E2%82%B9249%20(all%20inclusive).%20Please%20share%20the%20payment%20link%20and%20delivery%20timeline%20for%20New%20Delhi.">
                 Buy Raw Makhana (₹249)
               </a>
@@ -1051,6 +1056,61 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
+  <!-- D2C cart and checkout -->
+  <div class="store-backdrop" id="cartBackdrop" aria-hidden="true"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="cart-head">
+      <div>
+        <div class="kicker">Direct ordering</div>
+        <h2>Your cart</h2>
+      </div>
+      <button class="xbtn" type="button" id="closeCart" aria-label="Close cart">✕</button>
+    </div>
+    <div class="cart-scroll">
+      <div id="cartItems" class="cart-items" aria-live="polite"></div>
+      <div id="cartEmpty" class="cart-empty">
+        <strong>Your cart is empty.</strong>
+        <p class="muted">Add Raw Makhana to begin a direct order.</p>
+        <button class="button primary" type="button" data-add-to-cart="raw-makhana-100g">Add Raw Makhana • ₹249</button>
+      </div>
+
+      <div id="cartCheckout" hidden>
+        <div class="cart-summary">
+          <div><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div>
+          <div><span>Discount</span><strong id="cartDiscount">−₹0</strong></div>
+          <div class="cart-total"><span>Product total</span><strong id="cartTotal">₹0</strong></div>
+          <p class="muted fineprint">Delivery availability and any shipping charge are confirmed after pincode review.</p>
+        </div>
+
+        <form id="checkoutForm" class="checkout-form">
+          <h3>Delivery details</h3>
+          <div class="form-grid">
+            <label class="field"><span>Name *</span><input name="name" autocomplete="name" maxlength="80" required /></label>
+            <label class="field"><span>Mobile number *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit number" required /></label>
+            <label class="field field-full"><span>Email</span><input name="email" type="email" autocomplete="email" maxlength="254" /></label>
+            <label class="field field-full"><span>Address *</span><textarea name="address1" autocomplete="address-line1" rows="2" maxlength="240" required></textarea></label>
+            <label class="field"><span>City *</span><input name="city" autocomplete="address-level2" maxlength="80" required /></label>
+            <label class="field"><span>State *</span><input name="state" autocomplete="address-level1" maxlength="80" required /></label>
+            <label class="field"><span>Pincode *</span><input name="pincode" inputmode="numeric" autocomplete="postal-code" pattern="[1-9][0-9]{5}" maxlength="6" required /></label>
+            <label class="field"><span>Coupon</span><span class="coupon-row"><input name="coupon" id="couponInput" autocomplete="off" maxlength="24" placeholder="POPKAARI50" /><button class="button small" type="button" id="applyCoupon">Apply</button></span></label>
+            <label class="field field-full"><span>Order note</span><textarea name="notes" rows="2" maxlength="300" placeholder="Gifting or delivery instructions"></textarea></label>
+          </div>
+          <input class="store-honeypot" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <label class="check-row"><input name="consent" type="checkbox" required /> <span>I agree to Popkaari using these details to fulfil this order and contact me about it.</span></label>
+          <button class="button primary checkout-submit" type="submit">Place order request</button>
+          <p class="checkout-status" id="checkoutStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="order-success" id="orderSuccess" hidden>
+          <div class="kicker" id="orderSuccessKicker">Order received</div>
+          <h3 id="orderSuccessTitle">Thank you!</h3>
+          <p id="orderSuccessCopy" class="muted"></p>
+          <a id="orderWhatsApp" class="button primary" target="_blank" rel="noopener">Confirm on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
   <!-- Toast -->
   <div class="toast" id="toast" aria-live="polite" aria-atomic="true">
     <div id="toastText">Saved</div>
@@ -1064,10 +1124,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const POPKAARI = {
       discountCode: "POPKAARI50",
 
-      // ✅ Put a real endpoint here to store emails (Google Apps Script / your backend).
-      // Example:
-      // emailEndpoint: "https://script.google.com/macros/s/AKfycb.../exec",
-      emailEndpoint: "",
+      // Netlify Function stores consented signups in Supabase when server env vars are configured.
+      emailEndpoint: "/.netlify/functions/leads",
 
       showAutoModal: true,
       autoModalDelayMs: 12000,
@@ -1381,6 +1439,8 @@ function openPerk(interest){
         };
       });
     })();</script>
+
+  <script src="assets/js/store.js" defer></script>
 
   <!-- Small helper for screen readers -->
   <style>
